@@ -52,6 +52,7 @@ namespace Mission06_Bangerter.Controllers
             }
         }
 
+        // show the list of movies
         public IActionResult MovieList()
         {
             var movie = _context.Movies.Include("Category")
@@ -59,6 +60,8 @@ namespace Mission06_Bangerter.Controllers
 
             return View(movie);
         }
+
+        //allow user to edit the list of movies
 
         [HttpGet]
         public IActionResult Edit(int id)
@@ -81,6 +84,8 @@ namespace Mission06_Bangerter.Controllers
 
             return RedirectToAction("MovieList");
         }
+
+        //Allow the user to delete from the list of movies
 
         [HttpGet]
         public IActionResult Delete(int id)

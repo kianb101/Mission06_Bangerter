@@ -4,26 +4,33 @@
 @{
 }
 
-@model NewMovies
+@model Movie
 
 <h1>Add Movies</h1>
 
 <form method="post">
 
-    <label asp-for="Category">Category:</label>
-    <input asp-for="Category" required/>
+    <input type="hidden" asp-for="MovieId" />
+
+    <select asp-for="CategoryId">
+        <option value="">Select a Category</option>
+        @foreach (Category c in ViewBag.Categories)
+        {
+            <option value="@c.CategoryId">@c.CategoryName</option>
+        }
+    </select>
     <br /><br />
     <label asp-for="Title">Title: </label>
-    <input asp-for="Title" required />
+    <input asp-for="Title" />
     <br /><br />
     <label asp-for="Year">Year: </label>
-    <input asp-for="Year" required />
+    <input asp-for="Year"/>
     <br /><br />
     <label asp-for="Director">Director: </label>
-    <input asp-for="Director" required />
+    <input asp-for="Director"/>
     <br /><br />
     <label>Rating: </label>
-    <select asp-for="Rating" required>
+    <select asp-for="Rating">
         <option value="">Select Rating</option>
         <option value="G">G</option>
         <option value="PG">PG</option>
@@ -38,12 +45,20 @@
         <option value="false">No</option>
     </select>
     <br /><br />
+    <label>Copied to Plex: </label>
+    <select asp-for="CopiedToPlex">
+        <option value="">Select Option</option>
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+    </select>
+    <br /><br />
     <label asp-for="LentTo">Lent to: </label>
     <input asp-for="LentTo" />
     <br /><br />
     <label asp-for="Notes">Notes: </label>
-    <input asp-for="Notes" maxlength="25" />
+    <input asp-for="Notes"/>
     <br /><br />
     <button type="submit">Submit Movie</button>
 
+    <div asp-validation-summary="All"></div>
 </form>

@@ -8,6 +8,9 @@ namespace Mission06_Bangerter.Models
         {
         }
 
-        public DbSet<NewMovies> Movies { get; set; }
+        public DbSet<Movie> Movies { get; set; }
+
+        public DbSet<Category> Categories { get; set; }
+       
     }
 }

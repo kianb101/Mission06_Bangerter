@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Mission06_Bangerter.Models;
 using System.Diagnostics;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Mission06_Bangerter.Controllers
 {
@@ -24,17 +26,79 @@ namespace Mission06_Bangerter.Controllers
         [HttpGet]
         public IActionResult NewMovie()
         {
-            return View();
+            ViewBag.Categories = _context.Categories
+                .OrderBy(x => x.CategoryName) 
+                .ToList();
+            return View("NewMovie", new Movie());
         }
 
         //get the responses and save them to the data base and then redirect the person to the same page
         [HttpPost]
-        public IActionResult NewMovie(NewMovies response)
+        public IActionResult NewMovie(Movie response)
         {
-            _context.Movies.Add(response);
+            if (ModelState.IsValid)
+            {
+                _context.Movies.Add(response);
+                _context.SaveChanges();
+
+                return RedirectToAction("MovieList");
+            }
+            else
+            {
+                ViewBag.Categories = _context.Categories
+                    .OrderBy(x => x.CategoryName)
+                    .ToList();
+                return View(response);
+            }
+        }
+
+        public IActionResult MovieList()
+        {
+            var movie = _context.Movies.Include("Category")
+                .ToList();
+
+            return View(movie);
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var movieToEdit = _context.Movies
+                .Single(x => x.MovieId == id);
+
+            ViewBag.Categories = _context.Categories
+                .OrderBy(x => x.CategoryName)
+                .ToList();
+
+            return View("NewMovie", movieToEdit);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Movie updatedMovie)
+        {
+            _context.Update(updatedMovie);
             _context.SaveChanges();
 
-            return View(response);
+            return RedirectToAction("MovieList");
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            var movieToDelete = _context.Movies
+                .Single(x => x.MovieId == id);
+
+            return View(movieToDelete);
+
+        }
+
+        [HttpPost]
+        public IActionResult Delete(Movie movie)
+        {
+            _context.Movies.Remove(movie);
+            _context.SaveChanges();
+
+            return RedirectToAction("MovieList");
         }
     }
 }
